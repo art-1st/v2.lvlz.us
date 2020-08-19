@@ -1,0 +1,17 @@
+{
+  "name": "n9b8jmw-vaz2fl",
+  "hash": "G83DMtXPyCa1YOlYuUHVkFq7Xd/bzU2EP9zVlfSlzFw=",
+  "description": "Default Lambda@Edge for Next CloudFront distribution",
+  "memory": 512,
+  "timeout": 10,
+  "code": "/Users/YoonHwan/Works/project/LOVELYZIN.US/v2/.serverless_nextjs/default-lambda",
+  "shims": [],
+  "handler": "index.handler",
+  "runtime": "nodejs12.x",
+  "env": {},
+  "role": {
+    "arn": "arn:aws:iam::694572124564:role/n9b8jmw-50ia8fr"
+  },
+  "arn": "arn:aws:lambda:us-east-1:694572124564:function:n9b8jmw-vaz2fl",
+  "region": "us-east-1"
+}

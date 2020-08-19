@@ -1,0 +1,58 @@
+{
+  "id": "E1YW8KHSFDK3UJ",
+  "arn": "arn:aws:cloudfront::694572124564:distribution/E1YW8KHSFDK3UJ",
+  "url": "https://d1g9lsuc680c1r.cloudfront.net",
+  "region": "us-east-1",
+  "enabled": true,
+  "comment": "",
+  "priceClass": "PriceClass_All",
+  "origins": [
+    {
+      "url": "http://n9b8jmw-5eap3xg.s3.us-east-1.amazonaws.com",
+      "private": true,
+      "pathPatterns": {
+        "_next/static/*": {
+          "ttl": 86400,
+          "forward": {
+            "headers": "none",
+            "cookies": "none",
+            "queryString": false
+          }
+        },
+        "static/*": {
+          "ttl": 86400,
+          "forward": {
+            "headers": "none",
+            "cookies": "none",
+            "queryString": false
+          }
+        },
+        "_next/data/*": {
+          "ttl": 0,
+          "allowedHttpMethods": [
+            "HEAD",
+            "GET"
+          ],
+          "lambda@edge": {
+            "origin-request": "arn:aws:lambda:us-east-1:694572124564:function:n9b8jmw-vaz2fl:4"
+          }
+        }
+      }
+    }
+  ],
+  "defaults": {
+    "ttl": 0,
+    "forward": {
+      "cookies": "all",
+      "queryString": true
+    },
+    "allowedHttpMethods": [
+      "HEAD",
+      "GET"
+    ],
+    "lambda@edge": {
+      "origin-request": "arn:aws:lambda:us-east-1:694572124564:function:n9b8jmw-vaz2fl:4"
+    },
+    "compress": true
+  }
+}
