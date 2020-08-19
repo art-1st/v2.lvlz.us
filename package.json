@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "serverless"
   },
   "dependencies": {
     "@sls-next/serverless-component": "1.16.0",
@@ -16,7 +17,11 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "styled-components": "^5.1.1",
-    "tsconfig-paths-webpack-plugin": "^3.3.0"
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
+    "tui-calendar": "^1.12.13",
+    "tui-code-snippet": "^2.3.2",
+    "tui-date-picker": "^4.1.0",
+    "tui-time-picker": "^2.0.3"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.10.5",

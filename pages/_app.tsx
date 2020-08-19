@@ -4,15 +4,10 @@ import RootStore from '~/stores';
 import { ThemeProvider } from 'styled-components';
 import theme from '~/theme';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyBRZMU2ZJ73fwzTM6bFkVWjc6bvMP3gGKE',
-  authDomain: 'lvlzus.firebaseapp.com',
-  databaseURL: 'https://lvlzus.firebaseio.com',
-  projectId: 'lvlzus',
-  storageBucket: 'lvlzus.appspot.com',
-  messagingSenderId: '16174730460',
-  appId: '1:16174730460:web:51bc2cb27a1aecbabe7819',
-};
+import 'mobx-react/batchingForReactDom';
+import 'tui-calendar/dist/tui-calendar.css';
+import 'tui-date-picker/dist/tui-date-picker.css';
+import 'tui-time-picker/dist/tui-time-picker.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
