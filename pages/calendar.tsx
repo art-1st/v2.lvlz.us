@@ -1,8 +1,10 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { ISchedule } from 'tui-calendar';
+
+import Container from '@components/Layout/Container';
 
 const TuiCalendar = dynamic(() => import('../components/TuiCalendar'), {
   ssr: false,
@@ -29,12 +31,13 @@ const CalendarPage: NextPage = () => {
   return (
     <Container>
       <TuiCalendar schedules={schedules} />
+      <div>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
+      </div>
     </Container>
   );
 };
-
-const Container = styled.main`
-  display: block;
-`;
 
 export default CalendarPage;

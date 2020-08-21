@@ -1,24 +1,13 @@
+import { NextPage } from 'next';
 import Link from 'next/link';
-import firebase from 'firebase/app';
-import { useEffect } from 'react';
-import styled from 'styled-components';
+import { observer } from 'mobx-react';
+import useStores from '~/lib/hooks/useStores';
+import { IUserStore } from '~/stores/userStore';
 
-import 'firebase/auth';
+import Container from '@components/Layout/Container';
 
-const Home = () => {
-  useEffect(() => {
-    console.log('home');
-  }, []);
-
-  const login = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then(result => {
-        console.log(result);
-      });
-  };
+const Home: NextPage = observer(() => {
+  const { userStore } = useStores<{ userStore: IUserStore }>();
 
   return (
     <Container>
@@ -27,15 +16,18 @@ const Home = () => {
         <Link href="/calendar">
           <a>Calendar</a>
         </Link>
+        {userStore.isAuthenticated && <div>Hello. {userStore.userData?.displayName}</div>}
         <hr />
-        <button onClick={() => login()}>Login</button>
+        {userStore.isLoading ? (
+          <button disabled>Loading</button>
+        ) : !userStore.isAuthenticated ? (
+          <button onClick={() => userStore.signIn()}>SignIn</button>
+        ) : (
+          <button onClick={() => userStore.signOut()}>SignOut</button>
+        )}
       </div>
     </Container>
   );
-};
-
-const Container = styled.main`
-  display: block;
-`;
+});
 
 export default Home;
