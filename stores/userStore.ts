@@ -2,6 +2,7 @@ import { observable, action, computed } from 'mobx';
 import firebase from 'firebase/app';
 
 import 'firebase/auth';
+import { createNewLovelinus } from '~/database/users';
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
@@ -17,7 +18,7 @@ export interface IUserStore {
   initialized: boolean;
 
   auth: (user: firebase.User | null) => void;
-  signIn: () => void;
+  signIn: () => Promise<void>;
   signOut: () => void;
 
   isLoading: boolean;
@@ -40,16 +41,37 @@ class UserStore {
 
   @action
   signIn() {
-    firebase.auth().signInWithPopup(provider);
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(credential => {
+        const { user, additionalUserInfo } = credential;
+
+        if (additionalUserInfo?.isNewUser) {
+          if (!user) return;
+
+          createNewLovelinus({
+            name: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            uid: user.uid,
+          });
+        }
+      });
   }
 
   @action
-  signOut() {
+  async signOut(): Promise<void> {
     firebase
       .auth()
       .signOut()
       .then(() => {
         this.user = null;
+        return;
+      })
+      .catch(error => {
+        console.error(error);
+        return;
       });
   }
 

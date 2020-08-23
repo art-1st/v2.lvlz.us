@@ -5,11 +5,12 @@ import firebase from 'firebase/app';
 import firebaseConfig from '~/config/firebase.config';
 import RootStore from '~/stores';
 import userStore from '~/stores/userStore';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '~/theme';
 
-import 'firebase/auth';
 import 'mobx-react/batchingForReactDom';
+import 'firebase/auth';
 import 'tui-calendar/dist/tui-calendar.css';
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
@@ -20,6 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       firebase.initializeApp(firebaseConfig);
       firebase.auth().onAuthStateChanged(user => {
         userStore.auth(user);
+        console.log(user);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -28,6 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider {...RootStore}>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
     </Provider>

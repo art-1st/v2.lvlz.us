@@ -17,14 +17,6 @@ const Home: NextPage = observer(() => {
           <a>Calendar</a>
         </Link>
         {userStore.isAuthenticated && <div>Hello. {userStore.userData?.displayName}</div>}
-        <hr />
-        {userStore.isLoading ? (
-          <button disabled>Loading</button>
-        ) : !userStore.isAuthenticated ? (
-          <button onClick={() => userStore.signIn()}>SignIn</button>
-        ) : (
-          <button onClick={() => userStore.signOut()}>SignOut</button>
-        )}
       </div>
     </Container>
   );
