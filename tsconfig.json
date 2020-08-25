@@ -1,11 +1,6 @@
 {
   "extends": "./tsconfig.paths.json",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "typescript-styled-plugin"
-      }
-    ],
     "experimentalDecorators": true,
     "allowJs": true,
     "alwaysStrict": true,

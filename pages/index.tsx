@@ -4,13 +4,11 @@ import { observer } from 'mobx-react';
 import useStores from '~/lib/hooks/useStores';
 import { IUserStore } from '~/stores/userStore';
 
-import Container from '@components/Layout/Container';
-
 const Home: NextPage = observer(() => {
   const { userStore } = useStores<{ userStore: IUserStore }>();
 
   return (
-    <Container>
+    <div>
       <h1>Index</h1>
       <div>
         <Link href="/calendar">
@@ -18,7 +16,7 @@ const Home: NextPage = observer(() => {
         </Link>
         {userStore.isAuthenticated && <div>Hello. {userStore.userData?.displayName}</div>}
       </div>
-    </Container>
+    </div>
   );
 });
 

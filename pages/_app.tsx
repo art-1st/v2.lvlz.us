@@ -8,6 +8,7 @@ import userStore from '~/stores/userStore';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '~/theme';
+import Container from '~/components/Layout/Container';
 
 import 'mobx-react/batchingForReactDom';
 import 'firebase/auth';
@@ -21,7 +22,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       firebase.initializeApp(firebaseConfig);
       firebase.auth().onAuthStateChanged(user => {
         userStore.auth(user);
-        console.log(user);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,7 +31,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider {...RootStore}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Component {...pageProps} />
+        <Container>
+          <Component {...pageProps} />
+        </Container>
       </ThemeProvider>
     </Provider>
   );

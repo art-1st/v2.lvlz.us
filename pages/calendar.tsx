@@ -3,16 +3,25 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { ISchedule } from 'tui-calendar';
-
-import Container from '@components/Layout/Container';
+import { makeStyles } from '@material-ui/core/styles';
 
 const TuiCalendar = dynamic(() => import('../components/TuiCalendar'), {
   ssr: false,
   loading: () => <div>Loading...</div>,
 });
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'block',
+  },
+  calendarArea: {
+    margin: `-${theme.spacing(3)}px`,
+  },
+}));
+
 const CalendarPage: NextPage = () => {
   const [schedules, setSchedules] = useState<ISchedule[]>([]);
+  const classes = useStyles();
 
   useEffect(() => {
     setSchedules([
@@ -29,14 +38,16 @@ const CalendarPage: NextPage = () => {
   }, []);
 
   return (
-    <Container>
-      <TuiCalendar schedules={schedules} />
+    <div className={classes.root}>
+      <div className={classes.calendarArea}>
+        <TuiCalendar schedules={schedules} />
+      </div>
       <div>
         <Link href="/">
           <a>Home</a>
         </Link>
       </div>
-    </Container>
+    </div>
   );
 };
 
