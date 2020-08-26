@@ -83,8 +83,8 @@ const Container: React.FC = observer(({ children }) => {
   const { isLoading, isAuthenticated, userData } = userStore;
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+  const handleDrawerToggle = (open?: boolean) => {
+    setMobileOpen(open ?? !mobileOpen);
   };
 
   const drawer = (
@@ -98,7 +98,7 @@ const Container: React.FC = observer(({ children }) => {
               <ListItem
                 button
                 selected={router.pathname === '/'}
-                onClick={() => handleDrawerToggle()}
+                onClick={() => handleDrawerToggle(false)}
               >
                 <ListItemIcon>
                   <ViewListIcon />
@@ -115,7 +115,7 @@ const Container: React.FC = observer(({ children }) => {
               <ListItem
                 button
                 selected={router.pathname === '/calendar'}
-                onClick={() => handleDrawerToggle()}
+                onClick={() => handleDrawerToggle(false)}
               >
                 <ListItemIcon>
                   <EventNoteIcon />
@@ -177,7 +177,6 @@ const Container: React.FC = observer(({ children }) => {
             className={classes.drawer}
             variant="temporary"
             open={mobileOpen}
-            onClose={handleDrawerToggle}
             classes={{
               paper: classes.drawerPaper,
             }}
