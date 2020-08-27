@@ -14,7 +14,7 @@ const Home: NextPage = observer(() => {
         <Link href="/calendar">
           <a>Calendar</a>
         </Link>
-        {userStore.isAuthenticated && <div>Hello. {userStore.userData?.displayName}</div>}
+        {userStore.isAuthenticated && <div>Hello. {userStore.lovelinusData?.displayName}</div>}
       </div>
     </div>
   );

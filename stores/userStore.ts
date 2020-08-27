@@ -2,19 +2,14 @@ import { observable, action, computed } from 'mobx';
 import firebase from 'firebase/app';
 
 import 'firebase/auth';
-import { createNewLovelinus } from '~/database/users';
+import { createNewLovelinus, getLovelinus, ILovelinusData } from '~/database/users';
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
-interface UserData {
-  displayName: string | null;
-  email: string | null;
-  photoURL: string | null;
-  uid: string;
-}
-
 export interface IUserStore {
   user: firebase.User | null;
+  lovelinusData: ILovelinusData | null;
+
   initialized: boolean;
 
   auth: (user: firebase.User | null) => void;
@@ -23,7 +18,6 @@ export interface IUserStore {
 
   isLoading: boolean;
   isAuthenticated: boolean;
-  userData: UserData | null;
 }
 
 class UserStore {
@@ -31,12 +25,27 @@ class UserStore {
   user: IUserStore['user'] = null;
 
   @observable
+  lovelinusData: ILovelinusData | null = null;
+
+  @observable
   initialized: IUserStore['initialized'] = false;
 
   @action
   auth(user: firebase.User | null) {
     this.user = user;
-    this.initialized = true;
+
+    if (user) {
+      getLovelinus(user.uid).then(lovelinus => {
+        this.lovelinusData = {
+          displayName: user?.displayName,
+          email: user?.email,
+          photoURL: user?.photoURL,
+          uid: user?.uid,
+          admin: lovelinus.admin,
+        };
+      });
+      this.initialized = true;
+    }
   }
 
   @action
@@ -46,15 +55,28 @@ class UserStore {
       .signInWithPopup(provider)
       .then(credential => {
         const { user, additionalUserInfo } = credential;
+        if (!user) return;
+
+        this.lovelinusData = {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          uid: user.uid,
+          admin: false,
+        };
 
         if (additionalUserInfo?.isNewUser) {
-          if (!user) return;
-
           createNewLovelinus({
-            name: user.displayName,
+            displayName: user.displayName,
             email: user.email,
             photoURL: user.photoURL,
             uid: user.uid,
+            admin: false,
+          });
+        } else {
+          getLovelinus(user.uid).then(lovelinus => {
+            console.log(lovelinus);
+            this.lovelinusData!.admin = lovelinus.admin;
           });
         }
       });
@@ -83,19 +105,6 @@ class UserStore {
   @computed
   get isAuthenticated(): boolean {
     return this.user !== null && this.initialized;
-  }
-
-  @computed
-  get userData(): UserData | null {
-    if (!this.user) return null;
-    const { displayName, email, photoURL, uid } = this.user;
-
-    return {
-      displayName,
-      email,
-      photoURL,
-      uid,
-    };
   }
 }
 

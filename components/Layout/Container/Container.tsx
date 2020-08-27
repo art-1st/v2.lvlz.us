@@ -81,7 +81,7 @@ const Container: React.FC = observer(({ children }) => {
   const { userStore } = useStores<{ userStore: IUserStore }>();
   const router = useRouter();
   const classes = useStyles();
-  const { isLoading, isAuthenticated, userData } = userStore;
+  const { isLoading, isAuthenticated, lovelinusData } = userStore;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = (open?: boolean) => {
@@ -155,12 +155,12 @@ const Container: React.FC = observer(({ children }) => {
                 className={classes.avatar}
                 onClick={e => {
                   e.preventDefault();
-                  router.push(`/user/${userData!.uid}`);
+                  router.push(`/user/${lovelinusData!.uid}`);
                 }}
               >
                 <img
-                  src={userData?.photoURL ?? undefined}
-                  alt={userData?.displayName ?? undefined}
+                  src={lovelinusData?.photoURL ?? undefined}
+                  alt={lovelinusData?.displayName ?? undefined}
                   className={classes.avatarImg}
                   referrerPolicy="no-referrer"
                 />

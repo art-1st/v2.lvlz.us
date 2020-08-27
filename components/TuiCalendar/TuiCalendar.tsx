@@ -20,7 +20,7 @@ const TuiCalendar: React.FC<Props> = ({ schedules }) => {
     calendarRef.current = new ToastUICalendar('#calendar', {
       defaultView: 'month',
       taskView: true,
-      useCreationPopup: true,
+      useCreationPopup: false,
       useDetailPopup: true,
       template: {
         monthDayname: function (dayname) {

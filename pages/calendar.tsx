@@ -42,7 +42,6 @@ const CalendarPage: NextPage = observer(() => {
 
   useEffect(() => {
     return () => {
-      if (store.calendarRef) store.calendarRef.destroy();
       store.clearCachedMonth();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,14 +50,14 @@ const CalendarPage: NextPage = observer(() => {
   useEffect(() => {
     calendarRef.current = store.calendarRef;
 
-    if (store.calendarRef) {
-      store.calendarRef.on('clickSchedule', (event: { event: MouseEvent; schedule: ISchedule }) => {
-        console.log(event);
-      });
-      store.calendarRef.on('clickDayname', (event: any) => {
-        console.log(event);
-      });
-    }
+    // if (store.calendarRef) {
+    //   store.calendarRef.on('clickSchedule', (event: { event: MouseEvent; schedule: ISchedule }) => {
+    //     console.log(event);
+    //   });
+    //   store.calendarRef.on('clickDayname', (event: any) => {
+    //     console.log(event);
+    //   });
+    // }
   }, [store.calendarRef]);
 
   useEffect(() => {

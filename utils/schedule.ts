@@ -11,7 +11,7 @@ export function convertScheduleToTuiSchedule(
   }
 
   function convert(schedule: IScheduleData): ISchedule {
-    const { id, title, start, end, allDay } = schedule;
+    const { id, title, start, end, allDay, place } = schedule;
 
     return {
       id: id.toString(),
@@ -22,6 +22,7 @@ export function convertScheduleToTuiSchedule(
       isAllDay: !!allDay,
       category: 'time',
       dueDateClass: '',
+      location: place,
       raw: { ...schedule },
     };
   }

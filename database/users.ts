@@ -1,21 +1,32 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 
-interface ILovelinusData {
-  name: string | null;
+export interface ILovelinusAuthData {
+  displayName: string | null;
   email: string | null;
   photoURL: string | null;
   uid: string | null;
 }
+export interface ILovelinusData extends ILovelinusAuthData {
+  admin: boolean;
+}
 
 export function createNewLovelinus(user: ILovelinusData) {
   const database = firebase.database();
-  const { name, email, photoURL, uid } = user;
+  const { displayName, email, photoURL, uid, admin } = user;
 
   database.ref(`/lovelinus/${uid}`).set({
-    name,
+    displayName,
     email,
     photoURL,
     uid,
+    admin,
   });
+}
+
+export async function getLovelinus(uid: string): Promise<ILovelinusData> {
+  const database = firebase.database();
+  const snapshot = await database.ref(`/lovelinus/${uid}`).once('value');
+
+  return snapshot.val();
 }
