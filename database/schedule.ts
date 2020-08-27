@@ -23,5 +23,5 @@ export async function getSchedule(startAt: string, endAt: string): Promise<ISche
   const ref = database.ref(`/schedules`);
   const snapshot = await ref.orderByChild('start').startAt(startAt).endAt(endAt).once('value');
 
-  return Object.values(snapshot.val());
+  return snapshot.val() ? Object.values(snapshot.val()) : [];
 }

@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
+import { uniqBy } from 'lodash';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { getSchedule } from '~/database/schedule';
@@ -26,7 +26,8 @@ const useStyles = makeStyles(theme => ({
     margin: '24px 0',
   },
   calendarArea: {
-    margin: `-${theme.spacing(3)}px`,
+    margin: theme.spacing(0),
+    letterSpacing: 0,
   },
 }));
 
@@ -40,7 +41,24 @@ const CalendarPage: NextPage = observer(() => {
   const { initialized } = userStore;
 
   useEffect(() => {
+    return () => {
+      if (store.calendarRef) store.calendarRef.destroy();
+      store.clearCachedMonth();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     calendarRef.current = store.calendarRef;
+
+    if (store.calendarRef) {
+      store.calendarRef.on('clickSchedule', (event: { event: MouseEvent; schedule: ISchedule }) => {
+        console.log(event);
+      });
+      store.calendarRef.on('clickDayname', (event: any) => {
+        console.log(event);
+      });
+    }
   }, [store.calendarRef]);
 
   useEffect(() => {
@@ -61,9 +79,18 @@ const CalendarPage: NextPage = observer(() => {
   useEffect(() => {
     if (!dateRange) return;
 
-    getSchedule(dateRange.start, dateRange.end).then(data => {
-      setScheduleData(convertScheduleToTuiSchedule(data));
-    });
+    const month = calendarRef.current!.getDate().toDate().getMonth() + 1;
+
+    if (!store.cachedMonth.includes(month)) {
+      getSchedule(dateRange.start, dateRange.end).then(data => {
+        const newData = uniqBy([...scheduleData, ...convertScheduleToTuiSchedule(data)], 'id');
+
+        store.addCachedMonth(month);
+        setScheduleData(newData);
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange]);
 
   const prevMonth = () => {
@@ -98,11 +125,6 @@ const CalendarPage: NextPage = observer(() => {
       </div>
       <div className={classes.calendarArea}>
         <TuiCalendar schedules={scheduleData} />
-      </div>
-      <div>
-        <Link href="/">
-          <a>Home</a>
-        </Link>
       </div>
     </div>
   );

@@ -20,11 +20,32 @@ const TuiCalendar: React.FC<Props> = ({ schedules }) => {
     calendarRef.current = new ToastUICalendar('#calendar', {
       defaultView: 'month',
       taskView: true,
+      useCreationPopup: true,
+      useDetailPopup: true,
       template: {
         monthDayname: function (dayname) {
           return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
         },
       },
+    });
+
+    calendarRef.current.setCalendarColor('c-vlive', {
+      color: '#e8e8e8',
+      bgColor: '#585858',
+      borderColor: '#54f7ff',
+      dragBgColor: '#585858',
+    });
+    calendarRef.current.setCalendarColor('c-tv', {
+      color: '#282828',
+      bgColor: '#dc9656',
+      borderColor: '#a1b56c',
+      dragBgColor: '#dc9656',
+    });
+    calendarRef.current.setCalendarColor('c-radio', {
+      color: '#a16946',
+      bgColor: '#ab4642',
+      borderColor: '#a1b56c',
+      dragBgColor: '#ab4642',
     });
 
     store.registerCalendarRef(calendarRef.current);
@@ -34,7 +55,7 @@ const TuiCalendar: React.FC<Props> = ({ schedules }) => {
   useEffect(() => {
     if (!calendarRef.current) return;
 
-    console.log(calendarRef.current, schedules);
+    calendarRef.current.clear();
     calendarRef.current.createSchedules(schedules);
   }, [schedules]);
 
