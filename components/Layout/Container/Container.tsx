@@ -14,7 +14,12 @@ const Container: React.FC = ({ children }) => {
         <div className="logo">
           <h1>LOVELYZIN.US</h1>
         </div>
-        <Menu mode="horizontal" defaultSelectedKeys={['/']} selectedKeys={[router.pathname]}>
+        <Menu
+          theme="light"
+          mode="horizontal"
+          defaultSelectedKeys={['/']}
+          selectedKeys={[router.pathname]}
+        >
           <Menu.Item key="/">
             <Link href="/">
               <a>Home</a>
@@ -35,13 +40,15 @@ const Container: React.FC = ({ children }) => {
   );
 };
 
-const ContainerLayout = styled(Layout)``;
+const ContainerLayout = styled(Layout)`
+  background: #fff;
+`;
 
 const Header = styled(AntdHeader)`
   position: fixed;
   z-index: 3;
   width: 100%;
-  padding: 0 16px 0 148px;
+  padding: 0 16px 0 144px;
   background: rgba(255, 255, 255, 0.95) !important;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.075);
 
@@ -52,13 +59,25 @@ const Header = styled(AntdHeader)`
     top: 0;
     bottom: 0;
     left: 20px;
+    letter-spacing: -0.25px;
+    user-select: none;
 
     h1 {
       position: relative;
+      top: -1px;
       margin: 0;
       font-size: 14px;
       font-weight: bold;
       line-height: 1.3;
+    }
+  }
+
+  .ant-menu {
+    height: 65px;
+
+    .ant-menu-item {
+      margin: -2px 16px 0;
+      padding: 0 8px;
     }
   }
 `;
