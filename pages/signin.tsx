@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { observer } from 'mobx-react';
 import { useEffect } from 'react';
+import { Button } from 'antd';
 import useStores from '~/lib/hooks/useStores';
 import { IUserStore } from '~/stores/userStore';
-import { Button } from '@material-ui/core';
 
 const SignIn: NextPage = observer(() => {
   const router = useRouter();
@@ -19,8 +19,8 @@ const SignIn: NextPage = observer(() => {
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={() => userStore.signIn()}>
-        sign in with google
+      <Button type="primary" onClick={() => userStore.signIn()}>
+        signin
       </Button>
     </div>
   );

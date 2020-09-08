@@ -1,23 +1,22 @@
 import { NextPage } from 'next';
-import Link from 'next/link';
 import { observer } from 'mobx-react';
 import useStores from '~/lib/hooks/useStores';
 import { IUserStore } from '~/stores/userStore';
+import styled from 'styled-components';
 
 const Home: NextPage = observer(() => {
   const { userStore } = useStores<{ userStore: IUserStore }>();
 
   return (
-    <div>
-      <h1>Index</h1>
-      <div>
-        <Link href="/calendar">
-          <a>Calendar</a>
-        </Link>
-        {userStore.isAuthenticated && <div>Hello. {userStore.lovelinusData?.displayName}</div>}
-      </div>
-    </div>
+    <HomeContainer>
+      home...
+      {userStore.isAuthenticated && <div>Hello. {userStore.lovelinusData?.displayName}</div>}
+    </HomeContainer>
   );
 });
+
+const HomeContainer = styled.div`
+  padding: 16px;
+`;
 
 export default Home;

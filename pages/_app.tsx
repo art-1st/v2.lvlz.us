@@ -5,16 +5,13 @@ import firebase from 'firebase/app';
 import firebaseConfig from '~/config/firebase.config';
 import RootStore from '~/stores';
 import userStore from '~/stores/userStore';
-import { ThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '~/theme';
 import Container from '~/components/Layout/Container';
 
 import 'mobx-react/batchingForReactDom';
 import 'firebase/auth';
-import 'tui-calendar/dist/tui-calendar.css';
-import 'tui-date-picker/dist/tui-date-picker.css';
-import 'tui-time-picker/dist/tui-time-picker.css';
+import 'moment/locale/ko';
+import '~/styles/global.scss';
+import 'antd/dist/antd.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -29,12 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Provider {...RootStore}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Container>
-          <Component {...pageProps} />
-        </Container>
-      </ThemeProvider>
+      <Container>
+        <Component {...pageProps} />
+      </Container>
     </Provider>
   );
 }

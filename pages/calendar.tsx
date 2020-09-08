@@ -1,132 +1,58 @@
 import { NextPage } from 'next';
-import dynamic from 'next/dynamic';
-import { useState, useEffect, useRef } from 'react';
-import { observer } from 'mobx-react';
-import { uniqBy } from 'lodash';
-import { Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { getSchedule } from '~/database/schedule';
-import useStores from '~/lib/hooks/useStores';
-import { IStore } from '~/stores/store';
-import { IUserStore } from '~/stores/userStore';
-import Calendar, { ISchedule } from 'tui-calendar';
-import { convertScheduleToTuiSchedule } from '~/utils/schedule';
+import styled from 'styled-components';
+import { Calendar } from 'antd';
 
-const TuiCalendar = dynamic(() => import('../components/TuiCalendar'), {
-  ssr: false,
-  loading: () => <div>Loading...</div>,
-});
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'block',
-  },
-  header: {
-    display: 'block',
-    margin: '24px 0',
-  },
-  calendarArea: {
-    margin: theme.spacing(0),
-    letterSpacing: 0,
-  },
-}));
-
-const CalendarPage: NextPage = observer(() => {
-  const { store, userStore } = useStores<{ store: IStore; userStore: IUserStore }>();
-  const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(null);
-  const [scheduleData, setScheduleData] = useState<ISchedule[]>([]);
-  const classes = useStyles();
-  const calendarRef = useRef<Calendar | null>(null);
-
-  const { initialized } = userStore;
-
-  useEffect(() => {
-    return () => {
-      store.clearCachedMonth();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    calendarRef.current = store.calendarRef;
-
-    // if (store.calendarRef) {
-    //   store.calendarRef.on('clickSchedule', (event: { event: MouseEvent; schedule: ISchedule }) => {
-    //     console.log(event);
-    //   });
-    //   store.calendarRef.on('clickDayname', (event: any) => {
-    //     console.log(event);
-    //   });
-    // }
-  }, [store.calendarRef]);
-
-  useEffect(() => {
-    if (initialized && calendarRef.current) {
-      const rangeStart = calendarRef.current.getDateRangeStart().toDate().toISOString();
-      const rangeEnd = calendarRef.current.getDateRangeEnd().toDate().toISOString();
-      setDateRange({
-        start: rangeStart,
-        end: rangeEnd,
-      });
-
-      getSchedule(rangeStart!, rangeEnd!).then(data => {
-        setScheduleData(convertScheduleToTuiSchedule(data));
-      });
-    }
-  }, [initialized]);
-
-  useEffect(() => {
-    if (!dateRange) return;
-
-    const month = calendarRef.current!.getDate().toDate().getMonth() + 1;
-
-    if (!store.cachedMonth.includes(month)) {
-      getSchedule(dateRange.start, dateRange.end).then(data => {
-        const newData = uniqBy([...scheduleData, ...convertScheduleToTuiSchedule(data)], 'id');
-
-        store.addCachedMonth(month);
-        setScheduleData(newData);
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateRange]);
-
-  const prevMonth = () => {
-    if (!calendarRef.current) return;
-
-    calendarRef.current.prev();
-    const rangeStart = calendarRef.current.getDateRangeStart().toDate().toISOString();
-    const rangeEnd = calendarRef.current.getDateRangeEnd().toDate().toISOString();
-    setDateRange({
-      start: rangeStart,
-      end: rangeEnd,
-    });
-  };
-
-  const nextMonth = () => {
-    if (!calendarRef.current) return;
-
-    calendarRef.current.next();
-    const rangeStart = calendarRef.current.getDateRangeStart().toDate().toISOString();
-    const rangeEnd = calendarRef.current.getDateRangeEnd().toDate().toISOString();
-    setDateRange({
-      start: rangeStart,
-      end: rangeEnd,
-    });
-  };
-
+const CalendarPage: NextPage = () => {
   return (
-    <div className={classes.root}>
-      <div className={classes.header}>
-        <Button onClick={() => prevMonth()}>Prev</Button>
-        <Button onClick={() => nextMonth()}>Next</Button>
-      </div>
-      <div className={classes.calendarArea}>
-        <TuiCalendar schedules={scheduleData} />
-      </div>
-    </div>
+    <CalendarContainer>
+      <Calendar
+        locale={{
+          lang: {
+            locale: 'ko',
+            placeholder: '날짜를 선택하세요',
+            rangePlaceholder: ['시작일', '종료일'],
+            today: '오늘',
+            now: '지금',
+            backToToday: '오늘로',
+            ok: '확인',
+            clear: '초기화',
+            month: '월',
+            year: '연',
+            timeSelect: '시간 선택',
+            dateSelect: '날짜 선택',
+            monthSelect: '월 선택',
+            yearSelect: '연도 선택',
+            decadeSelect: '연대 선택',
+            yearFormat: 'YYYY',
+            dateFormat: 'YYYY-M-D',
+            dayFormat: 'D',
+            dateTimeFormat: 'YYYY-M-D HH:mm:ss',
+            monthFormat: 'MMMM',
+            monthBeforeYear: true,
+            previousMonth: '지난달 (PageUp)',
+            nextMonth: '다음달 (PageDown)',
+            previousYear: '작년 (Control + left)',
+            nextYear: '내년 (Control + right)',
+            previousDecade: '지난 연대',
+            nextDecade: '다음 연대',
+            previousCentury: '지난 세기',
+            nextCentury: '다음 세기',
+          },
+          timePickerLocale: {
+            placeholder: '시간을 선택하세요',
+          },
+          dateFormat: 'YYYY-MM-DD',
+          dateTimeFormat: 'YYYY-MM-DD HH:mm:ss',
+          weekFormat: 'YYYY-wo',
+          monthFormat: 'YYYY-MM',
+        }}
+      ></Calendar>
+    </CalendarContainer>
   );
-});
+};
+
+const CalendarContainer = styled.div`
+  padding: 16px;
+`;
 
 export default CalendarPage;
