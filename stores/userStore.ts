@@ -9,8 +9,8 @@ const provider = new firebase.auth.GoogleAuthProvider();
 export interface IUserStore {
   user: firebase.User | null;
   lovelinusData: ILovelinusData | null;
-
   initialized: boolean;
+  onAuthProgress: boolean;
 
   auth: (user: firebase.User | null) => void;
   signIn: () => Promise<void>;
@@ -30,26 +30,32 @@ class UserStore {
   @observable
   initialized: IUserStore['initialized'] = false;
 
+  @observable
+  onAuthProgress: IUserStore['onAuthProgress'] = false;
+
   @action
-  auth(user: firebase.User | null) {
+  async auth(user: firebase.User | null) {
     this.user = user;
 
     if (user) {
-      getLovelinus(user.uid).then(lovelinus => {
-        this.lovelinusData = {
-          displayName: user?.displayName,
-          email: user?.email,
-          photoURL: user?.photoURL,
-          uid: user?.uid,
-          admin: lovelinus.admin,
-        };
-      });
-      this.initialized = true;
+      const lovelinus = await getLovelinus(user.uid);
+
+      this.lovelinusData = {
+        displayName: user?.displayName,
+        email: user?.email,
+        photoURL: user?.photoURL,
+        uid: user?.uid,
+        admin: lovelinus.admin,
+      };
     }
+
+    this.initialized = true;
   }
 
   @action
   signIn() {
+    this.onAuthProgress = true;
+
     firebase
       .auth()
       .signInWithPopup(provider)
@@ -75,10 +81,11 @@ class UserStore {
           });
         } else {
           getLovelinus(user.uid).then(lovelinus => {
-            console.log(lovelinus);
             this.lovelinusData!.admin = lovelinus.admin;
           });
         }
+
+        this.onAuthProgress = false;
       });
   }
 
@@ -99,7 +106,7 @@ class UserStore {
 
   @computed
   get isLoading(): boolean {
-    return !this.initialized;
+    return !this.initialized || this.onAuthProgress;
   }
 
   @computed

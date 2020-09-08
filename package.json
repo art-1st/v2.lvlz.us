@@ -9,6 +9,7 @@
     "deploy": "serverless"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@sls-next/serverless-component": "1.16.0",
     "@types/lodash": "^4.14.160",
     "@types/styled-components": "^5.1.3",
