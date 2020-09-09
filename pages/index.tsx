@@ -21,7 +21,11 @@ const Home: NextPage = observer(() => {
 
   return (
     <HomeContainer>
-      {userStore.isAuthenticated && <div>Hello. {userStore.lovelinusData?.displayName}</div>}
+      {!userStore.isAuthenticated ? (
+        <p>Please Signin.</p>
+      ) : (
+        <p>Hello. {userStore.lovelinusData?.displayName}</p>
+      )}
       {!userStore.isAuthenticated ? (
         <Button type="primary" onClick={() => userStore.signIn()}>
           Sign In

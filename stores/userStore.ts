@@ -86,12 +86,16 @@ class UserStore {
         }
 
         this.onAuthProgress = false;
+      })
+      .catch(error => {
+        this.onAuthProgress = false;
+        console.error(error);
       });
   }
 
   @action
   async signOut(): Promise<void> {
-    firebase
+    await firebase
       .auth()
       .signOut()
       .then(() => {
@@ -111,7 +115,7 @@ class UserStore {
 
   @computed
   get isAuthenticated(): boolean {
-    return this.user !== null && this.initialized;
+    return this.user !== null && this.lovelinusData !== null && this.initialized;
   }
 }
 
