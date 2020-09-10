@@ -7,6 +7,7 @@ import RootStore from '~/stores';
 import userStore from '~/stores/userStore';
 import Container from '~/components/Layout/Container';
 
+import '@fullcalendar/core/';
 import 'mobx-react/batchingForReactDom';
 import 'firebase/auth';
 import 'moment/locale/ko';
@@ -15,13 +16,10 @@ import 'antd/dist/antd.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-      firebase.auth().onAuthStateChanged(user => {
-        userStore.auth(user);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    firebase.initializeApp(firebaseConfig);
+    firebase.auth().onAuthStateChanged(user => {
+      userStore.auth(user);
+    });
   }, []);
 
   return (
