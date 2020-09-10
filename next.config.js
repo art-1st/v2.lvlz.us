@@ -1,22 +1,28 @@
-module.exports = function(...args) {
-  let original = require('./next.config.original.1599578616031.js');
-  const finalConfig = {};
-  const target = { target: 'serverless' };
-  if (typeof original === 'function' && original.constructor.name === 'AsyncFunction') {
-    // AsyncFunctions will become promises
-    original = original(...args);
-  }
-  if (original instanceof Promise) {
-    // Special case for promises, as it's currently not supported
-    // and will just error later on
-    return original
-      .then((orignalConfig) => Object.assign(finalConfig, orignalConfig))
-      .then((config) => Object.assign(config, target));
-  } else if (typeof original === 'function') {
-    Object.assign(finalConfig, original(...args));
-  } else if (typeof original === 'object') {
-    Object.assign(finalConfig, original);
-  }
-  Object.assign(finalConfig, target);
-  return finalConfig;
-}
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const withTM = require('next-transpile-modules')(['@fullcalendar']);
+
+// require('dotenv').config();
+
+module.exports = withTM({
+  target: 'serverless',
+  compress: true,
+  poweredByHeader: false,
+  webpack: config => {
+    if (config.resolve.plugins) {
+      config.resolve.plugins.push(new TsconfigPathsPlugin());
+    } else {
+      config.resolve.plugins = [new TsconfigPathsPlugin()];
+    }
+
+    return config;
+  },
+  env: {
+    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+    FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
+    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+  },
+});

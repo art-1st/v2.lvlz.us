@@ -1,6 +1,6 @@
 {
   "name": "n9b8jmw-vaz2fl",
-  "hash": "z8PueLv3O7BzM0UfTwJAgCEGWFqAWEX4XdF7HYPFfSc=",
+  "hash": "e2E7VfN38CFPvCsdPFBgNiH8zv4y1bUtIvEY4H9aFvA=",
   "description": "Default Lambda@Edge for Next CloudFront distribution",
   "memory": 512,
   "timeout": 10,
