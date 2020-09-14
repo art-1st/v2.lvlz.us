@@ -1,6 +1,5 @@
 import { AppProps } from 'next/app';
 import { Provider } from 'mobx-react';
-import { useEffect } from 'react';
 import firebase from 'firebase/app';
 import firebaseConfig from '~/config/firebase.config';
 import RootStore from '~/stores';
@@ -16,16 +15,14 @@ import '@fullcalendar/common/main.css';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  useEffect(() => {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-      firebase.auth().onAuthStateChanged(user => {
-        userStore.auth(user);
-      });
-    }
-  }, []);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+  firebase.auth().onAuthStateChanged(user => {
+    userStore.auth(user);
+  });
+}
 
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider {...RootStore}>
       <Container>

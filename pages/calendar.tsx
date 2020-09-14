@@ -1,37 +1,44 @@
 import { NextPage } from 'next';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import styled from 'styled-components';
 import { getSchedule, IScheduleData } from '~/database/schedule';
+import useStores from '~/lib/hooks/useStores';
+import { IStore } from '~/stores/store';
+import { uniqBy } from 'lodash';
 
 interface Props {}
 
 const CalendarPage: NextPage<Props> = () => {
+  const { store } = useStores<{ store: IStore }>();
   const fcRef = useRef<FullCalendar>(null);
   const [schedules, setSchedules] = useState<IScheduleData[]>([]);
 
+  const onChangeDateRange = useCallback(
+    async (start: Date, end: Date) => {
+      const newSchedules = await getSchedule(start.toISOString(), end.toISOString());
+      setSchedules(prevSchedules => uniqBy([...prevSchedules, ...newSchedules], 'id'));
+      store.setLoadedDate(start, end);
+    },
+    [store],
+  );
+
   useEffect(() => {
     const API = fcRef.current!.getApi();
-    const startAt = API.view.activeStart.toISOString();
-    const endAt = API.view.activeEnd.toISOString();
+    const start = API.view.activeStart;
+    const end = API.view.activeEnd;
 
-    onChangeDateRange(startAt, endAt);
+    onChangeDateRange(start, end);
 
     API.on('datesSet', d => {
-      onChangeDateRange(d.start.toISOString(), d.end.toISOString());
+      if (store.loadedStartDate > d.start || store.loadedEndDate < d.end) {
+        onChangeDateRange(d.start, d.end);
+      }
     });
-  }, []);
-
-  const onChangeDateRange = async (startAt: string, endAt: string) => {
-    const schedules = await getSchedule(startAt, endAt);
-
-    setSchedules(prevSchedules => {
-      return [...prevSchedules, ...schedules];
-    });
-  };
+  }, [onChangeDateRange, store]);
 
   return (
     <CalendarContainer>
