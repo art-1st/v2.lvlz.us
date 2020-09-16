@@ -18,10 +18,22 @@ export interface IScheduleData {
   user: string;
 }
 
-export async function getSchedule(startAt: string, endAt: string): Promise<IScheduleData[]> {
+export async function getSchedules(startAt: string, endAt: string): Promise<IScheduleData[]> {
   const database = firebase.database();
-  const ref = database.ref(`/schedules`);
+  const ref = database.ref('/schedules');
   const snapshot = await ref.orderByChild('start').startAt(startAt).endAt(endAt).once('value');
+
+  return snapshot.val() ? Object.values(snapshot.val()) : [];
+}
+
+export async function getRecentSchedules(limit: number): Promise<IScheduleData[]> {
+  const database = firebase.database();
+  const ref = database.ref('/schedules');
+  const snapshot = await ref
+    .orderByChild('start')
+    .endAt(new Date().toISOString())
+    .limitToLast(limit)
+    .once('value');
 
   return snapshot.val() ? Object.values(snapshot.val()) : [];
 }

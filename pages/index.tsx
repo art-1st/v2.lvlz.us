@@ -1,13 +1,22 @@
 import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import useStores from '~/lib/hooks/useStores';
 import { IUserStore } from '~/stores/userStore';
+import { getRecentSchedules, IScheduleData } from '~/database/schedule';
 
 const Home: NextPage = observer(() => {
   const { userStore } = useStores<{ userStore: IUserStore }>();
+  const [recentSchedules, setRecentSchedules] = useState<IScheduleData[]>([]);
+
+  useEffect(() => {
+    getRecentSchedules(10).then(schedules => {
+      setRecentSchedules(schedules);
+    });
+  }, []);
 
   if (userStore.isLoading) {
     return (
@@ -35,6 +44,12 @@ const Home: NextPage = observer(() => {
           Sign Out
         </Button>
       )}
+      {recentSchedules.map(schedule => (
+        <div key={schedule.id}>
+          <span>{schedule.start}</span>
+          <strong>{schedule.title}</strong>
+        </div>
+      ))}
     </HomeContainer>
   );
 });

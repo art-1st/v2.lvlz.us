@@ -6,7 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import koLocale from '@fullcalendar/core/locales/ko';
 import styled from 'styled-components';
-import { getSchedule, IScheduleData } from '~/database/schedule';
+import { getSchedules, IScheduleData } from '~/database/schedule';
 import useStores from '~/lib/hooks/useStores';
 import { IStore } from '~/stores/store';
 import { uniqBy } from 'lodash';
@@ -20,7 +20,7 @@ const CalendarPage: NextPage<Props> = () => {
 
   const onChangeDateRange = useCallback(
     async (start: Date, end: Date) => {
-      const newSchedules = await getSchedule(start.toISOString(), end.toISOString());
+      const newSchedules = await getSchedules(start.toISOString(), end.toISOString());
       setSchedules(prevSchedules => uniqBy([...prevSchedules, ...newSchedules], 'id'));
       store.setLoadedDate(start, end);
     },
