@@ -4,6 +4,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import koLocale from '@fullcalendar/core/locales/ko';
 import styled from 'styled-components';
 import { getSchedule, IScheduleData } from '~/database/schedule';
 import useStores from '~/lib/hooks/useStores';
@@ -47,6 +48,8 @@ const CalendarPage: NextPage<Props> = () => {
         initialView="dayGridMonth"
         ref={fcRef}
         events={schedules as any}
+        height="auto"
+        locale={koLocale}
       />
     </CalendarContainer>
   );
