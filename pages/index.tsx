@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
-import { Button } from 'antd';
+import { Button, Card } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import useStores from '~/lib/hooks/useStores';
 import { IUserStore } from '~/stores/userStore';
@@ -44,12 +44,24 @@ const Home: NextPage = observer(() => {
           Sign Out
         </Button>
       )}
-      {recentSchedules.map(schedule => (
-        <div key={schedule.id}>
-          <span>{schedule.start}</span>
-          <strong>{schedule.title}</strong>
-        </div>
-      ))}
+      <div className="card-container">
+        {recentSchedules.map(schedule => (
+          <Card size="small" title={schedule.title} className="card" key={schedule.id}>
+            <p>
+              {new Date(schedule.start).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}{' '}
+              ~{' '}
+              {new Date(schedule.end).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </p>
+            <p>{schedule.desc}</p>
+          </Card>
+        ))}
+      </div>
     </HomeContainer>
   );
 });
@@ -62,6 +74,12 @@ const HomeContainer = styled.div`
     justify-content: center;
     align-items: center;
     padding: 64px;
+  }
+
+  .card-container {
+    .card {
+      margin-top: 12px;
+    }
   }
 `;
 
