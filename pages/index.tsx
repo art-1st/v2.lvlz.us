@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
-import { Button, Card } from 'antd';
+import { Card } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import useStores from '~/lib/hooks/useStores';
 import { IUserStore } from '~/stores/userStore';
@@ -30,20 +30,6 @@ const Home: NextPage = observer(() => {
 
   return (
     <HomeContainer>
-      {!userStore.isAuthenticated ? (
-        <p>Please Signin.</p>
-      ) : (
-        <p>Hello. {userStore.lovelinusData?.displayName}</p>
-      )}
-      {!userStore.isAuthenticated ? (
-        <Button type="primary" onClick={() => userStore.signIn()}>
-          Sign In
-        </Button>
-      ) : (
-        <Button type="primary" danger onClick={() => userStore.signOut()}>
-          Sign Out
-        </Button>
-      )}
       <div className="card-container">
         {recentSchedules.map(schedule => (
           <Card size="small" title={schedule.title} className="card" key={schedule.id}>

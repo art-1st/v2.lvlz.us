@@ -30,6 +30,11 @@ const Container: React.FC = ({ children }) => {
               <a>Calendar</a>
             </Link>
           </Menu.Item>
+          <Menu.Item key="/my">
+            <Link href="/my">
+              <a>My</a>
+            </Link>
+          </Menu.Item>
         </Menu>
       </Header>
       <Content>{children}</Content>

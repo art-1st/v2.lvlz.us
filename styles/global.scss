@@ -4,8 +4,13 @@ body,
   height: 100%;
 }
 
-
 .ant-layout {
   height: auto !important;
   min-height: 100% !important;
+}
+
+.fc {
+  .fc-daygrid-event-harness {
+    overflow: hidden;
+  }
 }

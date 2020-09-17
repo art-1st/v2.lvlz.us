@@ -9,11 +9,11 @@ import Container from '~/components/Layout/Container';
 import 'mobx-react/batchingForReactDom';
 import 'firebase/auth';
 import 'moment/locale/ko';
-import '~/styles/global.scss';
-import 'antd/dist/antd.css';
 import '@fullcalendar/common/main.css';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
+import '~/styles/global.scss';
+import 'antd/dist/antd.css';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
