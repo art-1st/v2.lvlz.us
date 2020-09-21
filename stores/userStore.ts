@@ -18,6 +18,7 @@ export interface IUserStore {
 
   isLoading: boolean;
   isAuthenticated: boolean;
+  isAdmin: boolean;
 }
 
 class UserStore {
@@ -116,6 +117,11 @@ class UserStore {
   @computed
   get isAuthenticated(): boolean {
     return this.user !== null && this.lovelinusData !== null && this.initialized;
+  }
+
+  @computed
+  get isAdmin(): boolean {
+    return this.lovelinusData?.admin === true;
   }
 }
 

@@ -9,16 +9,18 @@ import styled from 'styled-components';
 import { getSchedules, IScheduleData } from '~/database/schedule';
 import useStores from '~/lib/hooks/useStores';
 import { IStore } from '~/stores/store';
+import { IUserStore } from '~/stores/userStore';
 import { uniqBy } from 'lodash';
-import { Drawer } from 'antd';
+import { Button, Drawer } from 'antd';
 
 interface Props {}
 
 const CalendarPage: NextPage<Props> = () => {
-  const { store } = useStores<{ store: IStore }>();
+  const { store, userStore } = useStores<{ store: IStore; userStore: IUserStore }>();
   const fcRef = useRef<FullCalendar>(null);
   const [schedules, setSchedules] = useState<IScheduleData[]>([]);
   const [drawerSchedule, setDrawerSchedule] = useState<EventClickArg | null>(null);
+  const [isEdit, setEdit] = useState(false);
 
   const onChangeDateRange = useCallback(
     async (start: Date, end: Date) => {
@@ -49,6 +51,7 @@ const CalendarPage: NextPage<Props> = () => {
 
   const closeScheduleDrawer = () => {
     setDrawerSchedule(null);
+    setEdit(false);
   };
 
   return (
@@ -61,16 +64,27 @@ const CalendarPage: NextPage<Props> = () => {
         height="auto"
         locale={koLocale}
       />
-      <Drawer
+      <DrawerContainer
         title={drawerSchedule?.event.title}
         placement="bottom"
         closable={true}
         onClose={closeScheduleDrawer}
         visible={!!drawerSchedule}
         style={{ position: 'absolute' }}
+        footer={
+          userStore.isAdmin ? (
+            <div>
+              <Button type="primary">스케줄 수정</Button>
+              <Button type="dashed" danger>
+                스케줄 삭제
+              </Button>
+            </div>
+          ) : undefined
+        }
       >
-        {drawerSchedule?.event.extendedProps.desc}
-      </Drawer>
+        {userStore.isAdmin && <div>admin</div>}
+        {!isEdit ? <div>{drawerSchedule?.event.extendedProps.desc}</div> : <div>dd</div>}
+      </DrawerContainer>
     </CalendarContainer>
   );
 };
@@ -85,6 +99,22 @@ const CalendarPage: NextPage<Props> = () => {
 
 const CalendarContainer = styled.div`
   padding: 16px;
+`;
+
+const DrawerContainer = styled(Drawer)`
+  .ant-drawer-header {
+    padding-right: 48px;
+    word-break: keep-all;
+  }
+
+  .btn-edit {
+    display: inline-block;
+    margin-left: 6px;
+  }
+
+  button + button {
+    margin-left: 6px;
+  }
 `;
 
 export default CalendarPage;

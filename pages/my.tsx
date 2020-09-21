@@ -8,7 +8,7 @@ import { IUserStore } from '~/stores/userStore';
 
 const SignIn: NextPage = observer(() => {
   const { userStore } = useStores<{ userStore: IUserStore }>();
-  const { lovelinusData, isAuthenticated, isLoading, signIn, signOut } = userStore;
+  const { lovelinusData, isAuthenticated, isLoading } = userStore;
 
   if (isLoading) {
     return (
@@ -24,11 +24,11 @@ const SignIn: NextPage = observer(() => {
     <MyContainer>
       {!isAuthenticated ? <p>Please Signin.</p> : <p>Hello. {lovelinusData?.displayName}</p>}
       {!isAuthenticated ? (
-        <Button type="primary" onClick={() => signIn()}>
+        <Button type="primary" onClick={() => userStore.signIn()}>
           Sign In
         </Button>
       ) : (
-        <Button type="primary" danger onClick={() => signOut()}>
+        <Button type="primary" danger onClick={() => userStore.signOut()}>
           Sign Out
         </Button>
       )}
