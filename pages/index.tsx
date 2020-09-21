@@ -34,12 +34,12 @@ const Home: NextPage = observer(() => {
         {recentSchedules.map(schedule => (
           <Card size="small" title={schedule.title} className="card" key={schedule.id}>
             <p>
-              {new Date(schedule.start).toLocaleTimeString([], {
+              {new Date(schedule.start).toLocaleTimeString('ko', {
                 hour: '2-digit',
                 minute: '2-digit',
               })}{' '}
               ~{' '}
-              {new Date(schedule.end).toLocaleTimeString([], {
+              {new Date(schedule.end).toLocaleTimeString('ko', {
                 hour: '2-digit',
                 minute: '2-digit',
               })}
